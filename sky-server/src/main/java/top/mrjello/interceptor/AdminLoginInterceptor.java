@@ -2,12 +2,16 @@ package top.mrjello.interceptor;
 
 
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+import top.mrjello.constant.JwtClaimsConstant;
+import top.mrjello.context.BaseContext;
 import top.mrjello.utils.JwtUtil;
 
 /**
@@ -17,7 +21,14 @@ import top.mrjello.utils.JwtUtil;
 @Slf4j
 @Component
 public class AdminLoginInterceptor implements HandlerInterceptor {
-
+    /**
+     * 在请求处理之前进行调用（Controller方法调用之前）
+     * @param request 请求
+     * @param response 响应
+     * @param handler 处理器
+     * @return boolean
+     * @throws Exception 异常
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("{} is requesting", request.getRequestURI());
@@ -35,6 +46,10 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
 
         try{
             JwtUtil.checkToken(token);
+            Claims claims = JwtUtil.parseJwtToken(token);
+            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+            // 将员工id放入threadLocal中
+            BaseContext.setCurrentId(empId);
         } catch (Exception e) {
             log.info("token is invalid, error code 401");
             response.setStatus(401);
@@ -42,5 +57,19 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         }
         //4.如果token有效，放行
         return true;
+    }
+
+
+    /**
+     * 在请求处理之后进行调用，但是在视图被渲染之前（Controller方法调用之后）
+     * @param request 请求
+     * @param response 响应
+     * @param handler 处理器
+     * @param modelAndView 视图模型
+     * @throws Exception 异常
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        BaseContext.removeCurrentId();
     }
 }

@@ -1,57 +1,66 @@
 server:
   port: 8080
 
-#spring:
-#  profiles:
-#    active: dev
-#  main:
-#    allow-circular-references: true
-#  datasource:
-#    druid:
-#      driver-class-name: ${sky.datasource.driver-class-name}
-#      url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
-#      username: ${sky.datasource.username}
-#      password: ${sky.datasource.password}
-
-#config for database
 spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.234:3306/sky
-    username: jason
-    password: zxs123123
+    driver-class-name: ${sky.datasource.driver-class-name}
+    url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
+    username: ${sky.datasource.username}
+    password: ${sky.datasource.password}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    static-path-pattern: /**
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
-
-#mybatis:
-#  #mapper配置文件
-#  mapper-locations: classpath:mapper/*.xml
-#  type-aliases-package: com.sky.entity
-#  configuration:
-#    #开启驼峰命名
-#    map-underscore-to-camel-case: true
+  data:
+    redis:
+      host: ${sky.redis.host}
+      port: ${sky.redis.port}
+      database: ${sky.redis.database}
+      password: ${sky.redis.password}
 
 #config for mybatis
 mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: top.mrjello.entity
   configuration:
     #config for mybatis log
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #config for mybatis camelize
     map-underscore-to-camel-case: true
 
-#logging:
-#  level:
-#    com:
-#      sky:
-#        mapper: debug
-#        service: info
-#        controller: info
+#config for pagehelper
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
 
-#sprig transaction log
+
 logging:
   level:
-    org.springframework.jdbc.support.jdbcTransactionManager: debug
+    top:
+      mrjello:
+        service: info
+        controller: info
+        mapper: debug
+#    web: trace
+#    org:
+#      springframework:
+#        web: trace
+#        boot:
+#          web: trace
+
+
+
+
+
 
 

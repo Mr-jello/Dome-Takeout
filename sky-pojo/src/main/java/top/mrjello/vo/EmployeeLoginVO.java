@@ -20,15 +20,15 @@ import java.io.Serializable;
 @ApiModel(description = "员工登录返回的数据格式")
 public class EmployeeLoginVO implements Serializable {
     //数据库bigint类型的主键id，前端传过来的是Long类型，所以这里也用Long类型
-//    @ApiModelProperty("主键值")
+    @ApiModelProperty("主键值")
     private Long id;
 
-//    @ApiModelProperty("用户名")
+    @ApiModelProperty("用户名")
     private String userName;
 
-//    @ApiModelProperty("姓名")
+    @ApiModelProperty("姓名")
     private String name;
 
-//    @ApiModelProperty("jwt令牌")
+    @ApiModelProperty("jwt令牌")
     private String token;
 }

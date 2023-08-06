@@ -1,50 +1,49 @@
 package top.mrjello.entity;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
- * @author jason@mrjello.top
- * @date 2023/8/2 20:30
+ * @author Jason
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee implements Serializable {
+public class Category implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String username;
+    //类型: 1.菜品分类 2.套餐分类
+    private Integer type;
 
+    //分类名称
     private String name;
 
-    private String password;
+    //顺序
+    private Integer sort;
 
-    private String phone;
-
-    private String sex;
-
-    private String idNumber;
-
+    //分类状态 0 标识禁用 1 表示启用
     private Integer status;
 
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") 不推荐使用
+    //创建时间
     private LocalDateTime createTime;
 
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //更新时间
     private LocalDateTime updateTime;
 
+    //创建人
     private Long createUser;
 
+    //修改人
     private Long updateUser;
-
 }

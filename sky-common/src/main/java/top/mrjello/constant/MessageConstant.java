@@ -6,6 +6,8 @@ package top.mrjello.constant;
 public class MessageConstant {
 
     public static final String PASSWORD_ERROR = "密码错误";
+
+    public static final String PASSWORD_NOT_SAME = "两次输入的密码不一致";
     public static final String ACCOUNT_NOT_FOUND = "账号不存在";
     public static final String ACCOUNT_LOCKED = "账号被锁定";
     public static final String UNKNOWN_ERROR = "未知错误";
@@ -23,5 +25,6 @@ public class MessageConstant {
     public static final String DISH_BE_RELATED_BY_SETMEAL = "当前菜品关联了套餐,不能删除";
     public static final String ORDER_STATUS_ERROR = "订单状态错误";
     public static final String ORDER_NOT_FOUND = "订单不存在";
+    public static final String OVERTRY_LOGIN_LOCKED = "密码错误次数过多，账号已被锁定，请1小时后再试";
 
 }
