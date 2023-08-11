@@ -3,8 +3,8 @@ package top.mrjello.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,6 @@ import top.mrjello.result.PageResult;
 import top.mrjello.service.EmployeeService;
 import top.mrjello.utils.BeanHelper;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             log.info("This employee {} is disabled ", employeeLoginDTO.getUsername());
             throw new DataException(MessageConstant.ACCOUNT_LOCKED);
         }
+        //5.登录成功，返回Employee对象
         return employee;
     }
     // 检验账号是否被锁定
@@ -116,7 +116,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
     /**
      * 添加员工service实现类
      * @param employeeDTO 员工DTO
@@ -128,12 +127,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         assert employee != null;
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         employee.setStatus(StatusConstant.ENABLE);
-        // 设置时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        // 设置创建人和修改人
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        // 设置时间
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        // 设置创建人和修改人
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         //2. 调用mapper添加员工
         employeeMapper.addEmployee(employee);
@@ -168,8 +167,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
+//                .updateTime(LocalDateTime.now())
+//                .updateUser(BaseContext.getCurrentId())
                 .build();
         //2.调用mapper修改员工状态,后续也可以修改其他属性
         employeeMapper.updateEmployee(employee);
@@ -200,8 +199,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         //1.补全实体属性
         Employee employee = BeanHelper.copyProperties(employeeDTO, Employee.class, "password", "status", "createTime", "createUser");
         assert employee != null;
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         //2.调用mapper修改员工信息
         employeeMapper.updateEmployee(employee);
     }
@@ -221,19 +220,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(!employee.getPassword().equals(DigestUtils.md5DigestAsHex(employeeEditPasswordDTO.getOldPassword().getBytes()))) {
             throw new BusinessException(MessageConstant.PASSWORD_ERROR);
         }
-//        //判断新密码和确认密码是否一致
-//        if(!employeeEditPasswordDTO.getNewPassword().equals(employeeEditPasswordDTO.getConfirmPassword())) {
-//            throw new BusinessException(MessageConstant.PASSWORD_NOT_SAME);
-//        }
         //2.补全实体属性
         Employee editedEmployee = Employee.builder()
                 .id(employeeEditPasswordDTO.getEmpId())
                 .password(DigestUtils.md5DigestAsHex(employeeEditPasswordDTO.getNewPassword().getBytes()))
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
+//                .updateTime(LocalDateTime.now())
+//                .updateUser(BaseContext.getCurrentId())
                 .build();
-        //3.调用mapper修改员工密码
-        employeeMapper.updateEmployee(editedEmployee);
+        //3.调用mapper修改员工密码，如何出现异常，返回错误信息
+        try {
+            employeeMapper.updateEmployee(editedEmployee);
+        } catch (Exception e) {
+            throw new BusinessException(MessageConstant.PASSWORD_EDIT_FAILED);
+        }
+
     }
 
 }

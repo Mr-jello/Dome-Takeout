@@ -1,6 +1,5 @@
 package top.mrjello.config;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -9,7 +8,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.mrjello.interceptor.AdminLoginInterceptor;
+import top.mrjello.interceptor.UserLoginInterceptor;
 import top.mrjello.json.JacksonObjectMapper;
+
+import java.util.List;
 
 /**
  * @author jason@mrjello.top
@@ -21,6 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private AdminLoginInterceptor adminLoginInterceptor;
+    @Autowired
+    private UserLoginInterceptor userLoginInterceptor;
 
     /**
      * 添加拦截器
@@ -28,6 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 拦截所有admin请求，除了登录接口
         registry.addInterceptor(adminLoginInterceptor).addPathPatterns("/admin/**")
                                                         .excludePathPatterns("/admin/employee/login",
                                                                 "/swagger-resources/**",
@@ -37,6 +42,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                                                                 "/webjars/**",
                                                                 "/swagger-resources/configuration/ui",
                                                                 "/swagger-resources/configuration/security");
+        // 拦截所有user请求，除了登录接口和获取店铺状态接口
+        registry.addInterceptor(userLoginInterceptor).addPathPatterns("/user/**")
+                                                        .excludePathPatterns("/user/user/login",
+                                                               "/user/shop/status");
+
 
     }
 

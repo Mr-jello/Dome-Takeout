@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.mrjello.mapper.DishFlavorMapper">
+
+    <!--  动态批量保存口味信息  -->
+    <insert id="addDishFlavorBatch">
+        insert into dish_flavor (dish_id, name, value)
+        values
+            <foreach collection="flavors" item="flavor" separator=",">
+                (#{flavor.dishId}, #{flavor.name}, #{flavor.value})
+            </foreach>
+
+    </insert>
+
+    <!--  根据菜品id删除口味信息  -->
+    <delete id="deleteDishFlavorsByDishIds">
+        delete from dish_flavor
+        where dish_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

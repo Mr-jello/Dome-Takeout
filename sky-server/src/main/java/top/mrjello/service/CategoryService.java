@@ -2,7 +2,10 @@ package top.mrjello.service;
 
 import top.mrjello.dto.CategoryDTO;
 import top.mrjello.dto.CategoryPageQueryDTO;
+import top.mrjello.entity.Category;
 import top.mrjello.result.PageResult;
+
+import java.util.List;
 
 /**
  * @author jason@mrjello.top
@@ -49,4 +52,12 @@ public interface CategoryService {
      * @param categoryDTO 分类DTO
      */
     void updateCategory(CategoryDTO categoryDTO);
+
+
+    /**
+     * 根据类型查询分类
+     * @param type 分类类型
+     * @return List<CategoryDTO>
+     */
+    List<Category> queryCategoryByType(Integer type);
 }

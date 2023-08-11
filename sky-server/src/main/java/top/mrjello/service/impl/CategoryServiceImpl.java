@@ -2,20 +2,23 @@ package top.mrjello.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.mrjello.constant.MessageConstant;
 import top.mrjello.constant.StatusConstant;
-import top.mrjello.context.BaseContext;
 import top.mrjello.dto.CategoryDTO;
 import top.mrjello.dto.CategoryPageQueryDTO;
 import top.mrjello.entity.Category;
+import top.mrjello.exception.BusinessException;
 import top.mrjello.mapper.CategoryMapper;
+import top.mrjello.mapper.DishMapper;
+import top.mrjello.mapper.SetmealMapper;
 import top.mrjello.result.PageResult;
 import top.mrjello.service.CategoryService;
 import top.mrjello.utils.BeanHelper;
+
+import java.util.List;
 
 /**
  * @author jason@mrjello.top
@@ -27,6 +30,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private DishMapper dishMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
+
 
     /**
      * 根据分类名称分页查询分类的service实现类
@@ -54,12 +62,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = BeanHelper.copyProperties(categoryDTO, Category.class);
         assert category != null;
         category.setStatus(StatusConstant.DISABLE);
-        //设置时间
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        //设置创建人和修改人
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        //设置时间
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
+//        //设置创建人和修改人
+//        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateUser(BaseContext.getCurrentId());
         //2.新增分类
         categoryMapper.addCategory(category);
     }
@@ -70,6 +78,16 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void deleteCategory(Long id) {
+        //1.查看分类是否和菜品关联
+        if (!dishMapper.queryDishByCategoryId(id).isEmpty()) {
+            throw new BusinessException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+        }
+
+        //1.查看分类是否和套餐关联
+        if (!setmealMapper.querySetmealByCategoryId(id).isEmpty()) {
+            throw new BusinessException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+        }
+
         categoryMapper.deleteCategory(id);
     }
 
@@ -83,8 +101,8 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
+//                .updateTime(LocalDateTime.now())
+//                .updateUser(BaseContext.getCurrentId())
                 .build();
         //2.调用mapper修改分类状态,后续也可以修改其他属性
         categoryMapper.updateCategory(category);
@@ -93,7 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
     /**
      * 根据分类id查询分类的service实现类
      * @param id 分类id
-     * @return
+     * @return CategoryDTO 分类DTO
      */
     @Override
     public CategoryDTO queryCategoryById(Long id) {
@@ -111,11 +129,22 @@ public class CategoryServiceImpl implements CategoryService {
         //1.不全实体属性
         Category category = BeanHelper.copyProperties(categoryDTO, Category.class);
         assert category != null;
-        //设置时间
-        category.setUpdateTime(LocalDateTime.now());
-        //设置修改人
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        //设置时间
+//        category.setUpdateTime(LocalDateTime.now());
+//        //设置修改人
+//        category.setUpdateUser(BaseContext.getCurrentId());
         //2.调用mapper修改分类
         categoryMapper.updateCategory(category);
     }
+
+    /**
+     * 根据分类类型查询分类的service实现类
+     * @param type 分类类型
+     * @return List<CategoryDTO> 分类DTO集合
+     */
+    @Override
+    public List<Category> queryCategoryByType(Integer type) {
+        return categoryMapper.queryCategoryByType(type);
+    }
+
 }

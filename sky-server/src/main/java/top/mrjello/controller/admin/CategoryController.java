@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.mrjello.dto.CategoryDTO;
 import top.mrjello.dto.CategoryPageQueryDTO;
+import top.mrjello.entity.Category;
 import top.mrjello.result.PageResult;
 import top.mrjello.result.Result;
 import top.mrjello.service.CategoryService;
+
+import java.util.List;
 
 /**
  * @author jason@mrjello.top
@@ -33,6 +36,19 @@ public class CategoryController {
         PageResult pageResult = categoryService.queryCategoryByPage(categoryPageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 根据类型查询分类
+     * @param type 分类类型
+     * @return Result 分页结果
+     */
+    @GetMapping("/list")
+    public Result queryCategoryByType(Integer type) {
+        log.info("Query category by type: {}", type);
+        List<Category> categoryList = categoryService.queryCategoryByType(type);
+        return Result.success(categoryList);
+    }
+
 
 
     /**

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/8/3 0:21
  */
 @Component
-@ConfigurationProperties(prefix = "sky.jwt")
+@ConfigurationProperties(prefix = "wechat.jwt")
 @Data
 public class JwtProperties {
 

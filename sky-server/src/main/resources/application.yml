@@ -11,20 +11,48 @@ spring:
     url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
     username: ${sky.datasource.username}
     password: ${sky.datasource.password}
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-    static-path-pattern: /**
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 100MB
+  #config for spring redis
   data:
     redis:
       host: ${sky.redis.host}
       port: ${sky.redis.port}
       database: ${sky.redis.database}
       password: ${sky.redis.password}
+  #config for spring mvc
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    static-path-pattern: /**
+  #config for spring mvc multipart
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  #config for spring gmail
+  mail:
+    host: ${sky.mail.host}
+    port: ${sky.mail.port}
+    username: ${sky.mail.username}
+    password: ${sky.mail.password}
+    properties:
+      mail:
+        debug: true
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+
+
+
+
+
+
 
 #config for mybatis
 mybatis:
@@ -57,9 +85,19 @@ logging:
 #        web: trace
 #        boot:
 #          web: trace
+aliyun:
+  oss:
+    endpoint: ${sky.oss.endpoint}
+    access-key-id: ${sky.oss.access-key-id}
+    access-key-secret: ${sky.oss.access-key-secret}
+    bucket-name: ${sky.oss.bucket-name}
 
-
-
+wechat:
+  jwt:
+    user-secret-key: demo_takeout.user.demo_takeout.user.demo_takeout.user.demo_takeout.user.demo_takeout.user.demo_takeout.user
+    user-token-name: authentication
+  appid: ${sky.wechat.appid}
+  secret: ${sky.wechat.secret}
 
 
 

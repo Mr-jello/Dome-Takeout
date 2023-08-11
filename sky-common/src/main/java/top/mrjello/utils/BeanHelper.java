@@ -1,9 +1,10 @@
 package top.mrjello.utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author jason@mrjello.top
@@ -51,4 +52,25 @@ public class BeanHelper {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 将集合中的源对象的属性值拷贝到目标对象中
+     * @param source 源对象
+     * @param targetClass 目标对象
+     */
+    public static <S, T> List<T> copyListProperties(List<S> source, Class<T> targetClass) {
+        List<T> targetList = new ArrayList<>();
+        for (S s : source) {
+            try {
+                T target = BeanUtils.instantiateClass(targetClass);
+                org.springframework.beans.BeanUtils.copyProperties(s, target);
+                targetList.add(target);
+            } catch (Exception e) {
+                log.error("BeanHelper copyProperties error: {}", e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
+        return targetList;
+    }
+
 }
