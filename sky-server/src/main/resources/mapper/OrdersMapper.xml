@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.mrjello.mapper.OrdersMapper">
+
+
+    <insert id="addNewOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into orders
+        (number, status, user_id, address_book_id, order_time,
+         pay_method, pay_status, amount, remark, phone, address,
+         consignee, estimated_delivery_time, delivery_status,
+         pack_amount, tableware_number, tableware_status)
+        values (#{number}, #{status}, #{userId}, #{addressBookId}, #{orderTime},
+                #{payMethod}, #{payStatus}, #{amount}, #{remark},
+                #{phone}, #{address}, #{consignee}, #{estimatedDeliveryTime}, #{deliveryStatus},
+                #{packAmount}, #{tablewareNumber}, #{tablewareStatus})
+    </insert>
+
+    <!--  更新订单信息  -->
+    <update id="update" parameterType="top.mrjello.entity.Orders">
+        update orders
+        <set>
+            <if test="cancelReason != null and cancelReason!='' ">
+                cancel_reason=#{cancelReason},
+            </if>
+            <if test="rejectionReason != null and rejectionReason!='' ">
+                rejection_reason=#{rejectionReason},
+            </if>
+            <if test="cancelTime != null">
+                cancel_time=#{cancelTime},
+            </if>
+            <if test="payStatus != null">
+                pay_status=#{payStatus},
+            </if>
+            <if test="payMethod != null">
+                pay_method=#{payMethod},
+            </if>
+            <if test="checkoutTime != null">
+                checkout_time=#{checkoutTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="deliveryTime != null">
+                delivery_time = #{deliveryTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryOrdersByCondition" resultType="top.mrjello.entity.Orders">
+        select * from orders
+        <where>
+            <if test="number != null and number!=''">
+                and number like concat('%',#{number},'%')
+            </if>
+            <if test="phone != null and phone!=''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beginTime != null">
+                and order_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by order_time desc
+    </select>
+
+    <!--  根据订单状态和指定时间段查询订单营业额  -->
+    <select id="queryTurnoverStatistics" resultType="top.mrjello.dto.TurnoverReportDTO">
+        select
+            date_format(order_time,'%Y-%m-%d') as orderDate,
+            sum(amount) as orderMoney
+        from orders
+        <where>
+            <if test="status != null">
+                status = #{status}
+            </if>
+            <if test="startDateTime != null and endDateTime != null">
+                and order_time between #{startDateTime} and #{endDateTime}
+            </if>
+        </where>
+        group by date_format(order_time,'%Y-%m-%d')
+        order by date_format(order_time,'%Y-%m-%d')
+    </select>
+
+    <!--  根据订单状态和指定时间段查询订单数量  -->
+    <select id="queryOrdersStatistics" resultType="top.mrjello.dto.OrderReportDTO">
+        select
+            date_format(order_time,'%Y-%m-%d') as orderDate,
+            count(*) as orderCount
+        from orders
+        <where>
+            <if test="startDateTime != null and endDateTime != null">
+                order_time between #{startDateTime} and #{endDateTime}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        group by date_format(order_time,'%Y-%m-%d')
+        order by date_format(order_time,'%Y-%m-%d')
+    </select>
+
+
+
+</mapper>

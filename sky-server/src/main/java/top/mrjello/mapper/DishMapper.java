@@ -71,4 +71,12 @@ public interface DishMapper {
      */
     @AutoFill(OperationType.UPDATE)
     void updateDish(Dish dish);
+
+    /**
+     * 根据菜品状态统计菜品数量
+     * @param status 菜品状态
+     * @return Integer
+     */
+    @Select("select count(id) from dish where status = #{status}")
+    Integer countDishByStatus(Integer status);
 }

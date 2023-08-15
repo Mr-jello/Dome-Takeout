@@ -33,8 +33,8 @@
         <aspectj>1.9.4</aspectj>
         <jjwt>0.9.1</jjwt>
         <jaxb-api>2.3.1</jaxb-api>
-        <poi>3.17</poi>
-        <poi-ooxml>4.1.1</poi-ooxml>
+        <poi>5.2.3</poi>
+        <poi-ooxml>5.2.3</poi-ooxml>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -129,4 +129,11 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>uk.org.ponder</groupId>
+            <artifactId>j-servletutil</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -49,4 +49,10 @@ public interface ShoppingCartMapper {
      */
     @Delete("delete from shopping_cart where id = #{id}")
     void deleteShoppingCartById(ShoppingCart cart);
+
+    /**
+     * 批量添加购物车
+     * @param shoppingCartList 购物车实体类集合
+     */
+    void addShoppingCartBatch(List<ShoppingCart> shoppingCartList);
 }

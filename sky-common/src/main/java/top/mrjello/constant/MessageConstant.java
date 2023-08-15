@@ -10,6 +10,7 @@ public class MessageConstant {
     public static final String ACCOUNT_LOCKED = "账号被锁定";
     public static final String UNKNOWN_ERROR = "未知错误";
     public static final String USER_NOT_LOGIN = "用户未登录";
+    public static final String QUERY_DATABASE_ERROR = "数据库查询异常";
     public static final String CATEGORY_BE_RELATED_BY_SETMEAL = "当前分类关联了套餐,不能删除";
     public static final String CATEGORY_BE_RELATED_BY_DISH = "当前分类关联了菜品,不能删除";
     public static final String SHOPPING_CART_IS_NULL = "购物车数据为空，不能下单";
@@ -24,6 +25,7 @@ public class MessageConstant {
     public static final String DISH_BE_RELATED_BY_SETMEAL = "当前菜品关联了套餐,不能删除";
     public static final String ORDER_STATUS_ERROR = "订单状态错误";
     public static final String ORDER_NOT_FOUND = "订单不存在";
+    public static final String ORDER_CONFIRMED_NOT_CANCEL = "订单已确认，无法取消";
     public static final String OVERTRY_LOGIN_LOCKED = "密码错误次数过多，账号已被锁定，请1小时后再试";
 
 }

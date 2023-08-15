@@ -2,8 +2,6 @@ package top.mrjello;
 
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,10 +13,10 @@ import java.util.UUID;
  * @author jason@mrjello.top
  * @date 2023/8/3 18:24
  */
-@SpringBootTest
+//@SpringBootTest
 public class AppTest {
 
-    @Autowired
+//    @Autowired
     private JavaMailSender javaMailSender;
 
 
@@ -35,7 +33,7 @@ public class AppTest {
         simpleMailMessage.setFrom("quintonloventiy96@gmail.com");
         simpleMailMessage.setTo("z749047172@gmail.com");
         simpleMailMessage.setSubject("测试邮件");
-        simpleMailMessage.setText("测试邮件内容: 你好，这是一封测试邮件");
+        simpleMailMessage.setText("测试邮件内容: 你好，这是一封测试邮件3");
         javaMailSender.send(simpleMailMessage);
     }
 

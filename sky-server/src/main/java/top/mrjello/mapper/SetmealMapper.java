@@ -83,4 +83,12 @@ public interface SetmealMapper {
      * @param disable 套餐状态
      */
     void updateSetmealsStatus(List<Long> ids, Integer disable);
+
+    /**
+     * 根据套餐状态统计套餐数量
+     * @param status 套餐状态
+     * @return Integer
+     */
+    @Select("select count(id) from setmeal where status = #{status}")
+    Integer countSetmealByStatus(Integer status);
 }
